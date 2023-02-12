@@ -26,6 +26,10 @@ contract Basic4626Deposit_test is Test {
         assertEq(handler.totalAssets(), handler.sumDeposits());
     }
 
+    function invariant_totalSupply_should_ge_userShares() public {
+        assertGe(handler.totalSupply(), handler.balanceOf(msg.sender));
+    }
+
     // cannot have input parameters
     // function invariant_totalSupply_should_ge_userShares(address user) public {
     //     user;
@@ -74,6 +78,10 @@ contract Basic4626Deposit_handler is Test {
 
     function totalSupply() public view returns (uint256) {
         return vault.totalSupply();
+    }
+
+    function balanceOf(address user_) public view returns (uint256) {
+        return vault.balanceOf(user_);
     }
 
     modifier useActor(uint256 actorIndexSeed) {
