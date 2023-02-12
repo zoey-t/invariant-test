@@ -4,3 +4,17 @@ out = 'out'
 libs = ['lib']
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
+
+[invariant]
+# runs = 256
+# depth = 15
+# fail_on_revert = false
+# call_override = false
+# dictionary_weight = 80
+# include_storage = true
+# include_push_bytes = true
+
+[fmt]
+# line_length = 100
+# tab_width = 2
+# bracket_spacing = true
