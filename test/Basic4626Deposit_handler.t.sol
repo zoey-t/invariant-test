@@ -30,8 +30,8 @@ contract Basic4626Deposit_handler is Test {
         asset = new MockToken();
         vault = new Basic4626Deposit(address(asset), "basic 4626 deposit", "basic4626", 18);
 
-        excludeContract(address(Basic4626Deposit));
-        excludeContract(address(MockToken));
+        excludeContract(address(vault));
+        excludeContract(address(asset));
 
 
         address alice = vm.addr(0xA11ce);
