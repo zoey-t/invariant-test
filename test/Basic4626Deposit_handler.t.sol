@@ -18,10 +18,6 @@ contract Basic4626Deposit_test is Test {
         handler = new Basic4626Deposit_handler();
     }
 
-    // function invariant_A(address user_) public {
-    //     assertTrue(handler.sumDeposits() <= handler.sumDepositsOf(user_));
-    // }
-
     function invariant_totalSupply_should_eq_sumBalances() public {
         assertEq(handler.totalSupply(), handler.sumBalances());
     }
