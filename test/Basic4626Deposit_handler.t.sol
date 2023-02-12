@@ -11,6 +11,32 @@ contract MockToken is ERC20("Mock Token", "MToken", 18) {
     }
 }
 
+contract Basic4626Deposit_test is Test {
+    Basic4626Deposit_handler handler;
+
+    function setUp() public {
+        handler = new Basic4626Deposit_handler();
+    }
+
+    // function invariant_A(address user_) public {
+    //     assertTrue(handler.sumDeposits() <= handler.sumDepositsOf(user_));
+    // }
+
+    function invariant_totalSupply_should_eq_sumBalances() public {
+        assertEq(handler.totalSupply(), handler.sumBalances());
+    }
+
+    function invariant_totalAssets_should_eq_sumDeposits() public {
+        assertEq(handler.totalAssets(), handler.sumDeposits());
+    }
+
+    // cannot have input parameters
+    // function invariant_totalSupply_should_ge_userShares(address user) public {
+    //     user;
+    //     assertGe(handler.totalSupply(), 0);
+    // }
+}
+
 contract Basic4626Deposit_handler is Test {
     MockToken public asset;
     Basic4626Deposit public vault; // erc4626 vault
@@ -21,33 +47,19 @@ contract Basic4626Deposit_handler is Test {
     address internal currentActor;
 
     // ghost variables
-    uint256 public sumBalanceOf;
-    mapping(address user => uint256 assets) sumDeposits;
+    uint256 public sumBalances;
+    uint256 public sumDeposits;
+    mapping(address user => uint256 assets) public sumDepositsOf;
 
-    
-
-    function setUp() public {
+    constructor() {
         asset = new MockToken();
         vault = new Basic4626Deposit(address(asset), "basic 4626 deposit", "basic4626", 18);
-
-        excludeContract(address(vault));
-        excludeContract(address(asset));
-
-
         address alice = vm.addr(0xA11ce);
         address bob = vm.addr(0xB0b);
         actors.push(alice);
         actors.push(bob);
         actors.push(address(this));
-
-        
     }
-
-    function invariant_A(address user_) public {
-        assertTrue(vault.totalAssets() <= vault.balanceOf(user_));
-        
-    }
-
 
     function deposit(uint256 assets_, uint256 actorIndex_) public useActor(actorIndex_) {
         asset.mint(currentActor, assets_);
@@ -55,8 +67,17 @@ contract Basic4626Deposit_handler is Test {
 
         uint256 shares = vault.deposit(assets_, address(this));
 
-        sumBalanceOf += shares;
-        sumDeposits[currentActor] += assets_;
+        sumBalances += shares;
+        sumDeposits += assets_;
+        sumDepositsOf[currentActor] += assets_;
+    }
+
+    function totalAssets() public view returns (uint256) {
+        return vault.totalAssets();
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return vault.totalSupply();
     }
 
     modifier useActor(uint256 actorIndexSeed) {
