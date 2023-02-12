@@ -2,7 +2,6 @@
 pragma solidity 0.8.18;
 
 contract ExampleContract1 {
-
     uint256 public val1;
     uint256 public val2;
     uint256 public val3;
@@ -16,8 +15,4 @@ contract ExampleContract1 {
         val2 += amount;
         val3 += amount;
     }
-
 }
-
-
-
